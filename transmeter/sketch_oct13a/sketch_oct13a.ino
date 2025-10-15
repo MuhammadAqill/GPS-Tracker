@@ -143,7 +143,7 @@ void gpsTask(void *pvParameters) {
             LoRa.printf("Google Maps: https://www.google.com/maps?q=%.6f,%.6f\n", currentLat, currentLon);
             LoRa.endPacket();
 
-            Serial.println("📡 Data dihantar ke receiver bagi tiada pergerakan.\n");
+            Serial.println("📡 Data dihantar ke receiver bagi tiada pergerakan.\n");  
 
           }
 
