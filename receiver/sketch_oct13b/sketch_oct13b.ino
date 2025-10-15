@@ -4,8 +4,8 @@
 #include <HTTPClient.h>
 
 // ===================== WiFi Setup =====================
-const char* ssid     = "Redmi 9C";
-const char* password = "aqilsem#";
+const char* ssid     = "Cgudilla 2.4G@unifi";
+const char* password = "fadhilah79";
 
 // ===================== Telegram Bot Setup =====================
 const char* botToken = "8366873696:AAGfN5gOyNYP0alZLtl9avIQF3qodUKWxnw";
@@ -52,23 +52,7 @@ void loop() {
     Serial.println(incoming);
     Serial.println("======================");
 
-    // Contoh data: "LAT:5.1234,LON:100.1234"
-    float lat = 0, lon = 0;
-    if (sscanf(incoming.c_str(), "LAT:%f,LON:%f", &lat, &lon) == 2) {
-      String latMsg = "📍 Latitude: " + String(lat, 6);
-      String lonMsg = "📍 Longitude: " + String(lon, 6);
-      String mapLink = "🌐 Google Maps:\nhttps://maps.google.com/?q=" + String(lat, 6) + "," + String(lon, 6);
-
-      Serial.println("📤 Menghantar ke Telegram...");
-      sendTelegramMessage(latMsg);
-      delay(5000);
-      sendTelegramMessage(lonMsg);
-      delay(5000);
-      sendTelegramMessage(mapLink);
-      delay(10000);
-    } else {
-      sendTelegramMessage(incoming);
-    }
+    sendTelegramMessage(incoming);
   }
 }
 
