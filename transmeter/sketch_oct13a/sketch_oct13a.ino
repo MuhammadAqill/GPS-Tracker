@@ -30,8 +30,8 @@ bool gpsEnabled = false;
 String messageLat = "";
 String messageLon = "";
 
-float lastLat = 2.904057;
-float lastLon = 101.863510;
+float lastLat = 3.456863;
+float lastLon = 101.669746;
 
 bool hasLastFix = false;  // supaya tak kira jarak kali pertama
 
@@ -44,8 +44,6 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
 
-  Serial.println("LoRa Sender Test");
-
   LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
 
   if (!LoRa.begin(923E6)) {
@@ -53,9 +51,9 @@ void setup() {
     while (1);
   }
 
+  Serial.println("");
   Serial.println("LoRa init OK!");
-
-  Serial.println("\n=== LilyGO T-Beam GPS Tracker (Auto Send Outside Zone) ===");
+  Serial.println("LilyGO T-Beam GPS Tracker (Auto Send Outside Zone)");
 
   initializeGPS();
   
@@ -70,11 +68,12 @@ void loop() {
 
 // ===================== GPS Init =====================
 void initializeGPS() {
-  Serial.println("\n--- Initializing GPS ---");
+  Serial.println("Initializing GPS");
   GPS.begin(GPS_BAUD, SERIAL_8N1, GPS_RX, GPS_TX);
   delay(2000);
   gpsEnabled = true;
   Serial.println("GPS initialized.");
+  Serial.println("");
 }
 
 // ===================== Haversine Function =====================
@@ -100,62 +99,56 @@ void gpsTask(void *pvParameters) {
       }
 
       if (gps.location.isValid()) {
-        float currentLat = gps.location.lat();
-        float currentLon = gps.location.lng();
+        if(hasLastFix) {
+          float currentLat = gps.location.lat();
+          float currentLon = gps.location.lng();
 
-      if(hasLastFix) {
-        double jarak = haversine(lastLat, lastLon, currentLat, currentLon);
-        Serial.printf("📏 Jarak dari lokasi sebelumnya: %.2f meter\n", jarak);
+          double jarak = haversine(lastLat, lastLon, currentLat, currentLon);
 
-        messageLat = "Latitude: " + String(currentLat, 6);
-        messageLon = "Longitude: " + String(currentLon, 6);
+          messageLat = "Latitude: " + String(currentLat, 6);
+          messageLon = "Longitude: " + String(currentLon, 6);
 
-        Serial.println("=== GPS DATA ===");
-        Serial.println(messageLat);
-        Serial.println(messageLon);
-        Serial.printf("Google Maps: https://www.google.com/maps?q=%.6f,%.6f\n", currentLat, currentLon);
+          Serial.println("GPS DATA");
+          Serial.printf("📏 Jarak dari lokasi sebelumnya: %.2f meter\n", jarak);
+          Serial.println(messageLat);
+          Serial.println(messageLon);
+          Serial.printf("Google Maps: https://www.google.com/maps?q=%.6f,%.6f\n", currentLat, currentLon);
 
-        LoRa.beginPacket();
-        LoRa.print("📏 Jarak dari lokasi sebelumnya:");
-        LoRa.println(jarak);
-        LoRa.println(messageLat);
-        LoRa.println(messageLon);
-        LoRa.printf("Google Maps: https://www.google.com/maps?q=%.6f,%.6f\n", currentLat, currentLon);
-        LoRa.endPacket();
-
-        Serial.println("================");
-
-        if (jarak >= MOVEMENT_THRESHOLD) {
+          if (jarak >= MOVEMENT_THRESHOLD) {
+            Serial.println("GPS DATA");
             Serial.println("🚨 Terdapat pergerakan lebih dari 10 meter!");
+            Serial.printf("📏 Jarak dari lokasi sebelumnya: %.2f meter\n", jarak);
+            Serial.println(messageLat);
+            Serial.println(messageLon);
+            Serial.printf("Google Maps: https://www.google.com/maps?q=%.6f,%.6f\n", currentLat, currentLon);
 
             LoRa.beginPacket();
             LoRa.println("ALERT: Pergerakan dikesan!");
             LoRa.print("📏 Jarak dari lokasi sebelumnya:");
             LoRa.println(jarak);
+            LoRa.println(messageLat);
+            LoRa.println(messageLon);
+            LoRa.printf("Google Maps: https://www.google.com/maps?q=%.6f,%.6f\n", currentLat, currentLon);
             LoRa.endPacket();
 
-            Serial.println("📡 Data dihantar ke receiver.\n");
-          } else {
-            // Serial.println("✅ Tiada pergerakan ketara.\n");
+            Serial.println("📡 Data dihantar ke receiver bagi pergerakan.\n");
 
-            // String messageLat = "Latitude: " + String(currentLat, 6);
-            // String messageLon = "Longitude: " + String(currentLon, 6);
-            // String mapLink = "https://www.google.com/maps?q=" + 
-            //                  String(currentLat, 6) + "," + String(currentLon, 6);
+          } else if (jarak < MOVEMENT_THRESHOLD) {
+            LoRa.beginPacket();
+            LoRa.println("Tiada Pergerakan dikesan!");
+            LoRa.print("📏 Jarak dari lokasi sebelumnya:");
+            LoRa.println(jarak);
+            LoRa.println(messageLat);
+            LoRa.println(messageLon);
+            LoRa.printf("Google Maps: https://www.google.com/maps?q=%.6f,%.6f\n", currentLat, currentLon);
+            LoRa.endPacket();
 
-            // LoRa.beginPacket();
-            // LoRa.println("✅ Tiada pergerakan ketara");
-            // LoRa.println(messageLat);
-            // LoRa.println(messageLon);
-            // LoRa.println(mapLink);
-            // LoRa.endPacket();
+            Serial.println("📡 Data dihantar ke receiver bagi tiada pergerakan.\n");
+
           }
 
         }
 
-        // Simpan lokasi terakhir
-        lastLat = currentLat;
-        lastLon = currentLon;
         hasLastFix = true;
 
       } else {
