@@ -31,8 +31,8 @@ int main() {
     // Contoh koordinat
     lat1 = 2.904685;
     lon1 = 101.864059;
-    lat2 = 2.904715;
-    lon2 = 101.864105;
+    lat2 = 3.456979;
+    lon2 = 101.669853;
 
     double jarak = haversine(lat1, lon1, lat2, lon2);
 
