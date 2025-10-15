@@ -8,8 +8,8 @@ const char* ssid     = "Cgudilla 2.4G@unifi";
 const char* password = "fadhilah79";
 
 // ===================== Telegram Bot Setup =====================
-const char* botToken = "8366873696:AAGfN5gOyNYP0alZLtl9avIQF3qodUKWxnw";
-const char* chatID   = "314423431";
+const char* botToken = "8366873696:AAGfN5gOyNYP0alZLtl9avIQF3qodUKWxnwb";
+const char* chatID   = "3144234314";
 
 // ===================== Pin LoRa (untuk T-Beam) =====================
 #define LORA_SS   18
