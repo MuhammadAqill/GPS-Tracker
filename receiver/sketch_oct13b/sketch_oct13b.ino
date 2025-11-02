@@ -4,12 +4,12 @@
 #include <HTTPClient.h>
 
 // ===================== WiFi Setup =====================
-const char* ssid     = "Cgudilla 2.4G@unifi";
-const char* password = "fadhilah79";
+const char* ssid     = "itik";
+const char* password = "cucutimah";
 
 // ===================== Telegram Bot Setup =====================
-const char* botToken = "8366873696:AAGfN5gOyNYP0alZLtl9avIQF3qodUKWxnwb";
-const char* chatID   = "3144234314";
+const char* botToken = "";
+const char* chatID   = "";
 
 // ===================== Pin LoRa (untuk T-Beam) =====================
 #define LORA_SS   18
