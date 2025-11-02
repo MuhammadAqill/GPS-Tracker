@@ -12,7 +12,7 @@ HardwareSerial GPS(1);
 TinyGPSPlus gps;
 
 #define R 6371000.0 // jejari bumi dalam meter
-#define MOVEMENT_THRESHOLD 10 // meter
+#define MOVEMENT_THRESHOLD 50 // meter
 
 #define GPS_RX 34   // RX2 pada T-Beam
 #define GPS_TX 12   // TX2 pada T-Beam
@@ -30,8 +30,8 @@ bool gpsEnabled = false;
 String messageLat = "";
 String messageLon = "";
 
-float lastLat = 3.456863;
-float lastLon = 101.669746;
+float lastLat = 2.904202;
+float lastLon = 101.863350;
 
 bool hasLastFix = false;  // supaya tak kira jarak kali pertama
 
